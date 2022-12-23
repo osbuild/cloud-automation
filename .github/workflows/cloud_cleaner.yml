@@ -1,0 +1,27 @@
+name: Cloud cleaner
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 * * * *' # every hour
+
+jobs:
+
+  cloud_cleaner:
+    name: "Free cloud resources"
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.V2_AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.V2_AWS_SECRET_ACCESS_KEY }}
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v2
+
+      - name: dependencies installation
+        run: |
+          sudo apt install python3-pip -y
+          sudo pip install boto3
+
+      - name: cloud cleaner
+        run: |
+          ./aws-cleaner.py
